@@ -1,41 +1,33 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
-#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<int> arr;
+const int MAX=101010;
+int N,A[MAX];
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    
-    int N;
-    cin >> N;
+    ios_base::sync_with_stdio(0),cin.tie(0);
 
-    for (int i = 0; i < N; i++) {
-        int x;
-        cin >> x;
-        arr.push_back(x);
-    }
-    
-    int start = 0, fin = N-1;
-    ll left = arr[0], right = arr[N-1];
-    ll sum = left + right;
+    cin>>N;
+    for (int i=1; i<=N; i++) cin>>A[i];
 
-    while(start < fin){
-        ll next = arr[start] + arr[fin];
-        if(abs(sum) > abs(next)){
-            sum = next;
-            left = arr[start];
-            right = arr[fin];
+    sort(A+1,A+N+1);
+
+    pair<int,int> ans={A[1],A[2]};
+    
+    if (A[N]<0) ans={A[N-1],A[N]};
+    if (A[1]>0) ans={A[1],A[2]};
+
+    for (int i=1; i<=N; i++) {
+        int lb=lower_bound(A+1,A+i,-A[i])-A;
+
+        for (int j=max(1,lb-2); j<=min(i-1,lb+2); j++) {
+            if (abs(A[i]+A[j])<abs(ans.first+ans.second)) {
+                ans={A[j],A[i]};
+            }
         }
-        if(next <= 0) start++;
-        else fin--;
     }
 
-    cout << left << " " << right;
+    cout<<ans.first<<' '<<ans.second<<'\n';
+
     return 0;
 }
