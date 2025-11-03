@@ -1,28 +1,19 @@
 #include <bits/stdc++.h>
-#define ll long long int
-
+#define ll long long
 using namespace std;
 
 int n;
-ll dp[101];
-
-ll go(int i) {
-    if (i <= 1) return i;
-    ll &ret = dp[i];
-    if (ret != -1) return ret;
-    ret = go(i-1) + go(i-2);
-    return ret;
-}
+ll arr[101];
 
 int main(void) {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-
-    fill(dp, dp+101, -1);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
 
     cin >> n;
-    cout << go(n);
-
+    arr[0] = 0, arr[1] = 1;
+    for (int i = 2; i <= n; i++)
+        arr[i] = arr[i - 1] + arr[i - 2];
+    
+    cout << arr[n];
     return 0;
 }
