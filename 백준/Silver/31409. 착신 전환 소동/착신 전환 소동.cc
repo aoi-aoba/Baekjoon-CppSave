@@ -1,26 +1,22 @@
 #include <bits/stdc++.h>
-#define fastIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 using namespace std;
 
-int n, res;
-vector<int> v;
+int n, a[101010], res = 0;
 
 int main(void) {
-    fastIO;
+    fastio;
     cin >> n;
-
-    v.push_back(0);
     for (int i = 1; i <= n; i++) {
-        int temp;
-        cin >> temp;
-        if (i == temp) {
+        cin >> a[i];
+        if (a[i] == i) {
             res++;
-            v.push_back(i + 1 > n ? (i + 1) % n : i + 1);
-        } else v.push_back(temp);
+            if (i == n) a[i] = 1;
+            else a[i] = n;
+        }
     }
-
     cout << res << '\n';
-    for (int i = 1; i <= n; i++)
-        cout << v[i] << ' ';
-    return 0;
+    for (int i = 1; i <= n; i++) {
+        cout << a[i] << ' ';
+    }
 }
