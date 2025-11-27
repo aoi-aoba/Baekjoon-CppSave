@@ -6,14 +6,26 @@ using namespace std;
 const int INF = 1e9;
 
 int n, m, x;
-int dist[1010], res[1010];
+int dist[1010], revdist[1010];
 vector<pair<int, int>> graph[1010];
+vector<pair<int, int>> revgr[1010];
+priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
 
-void dijkstra(int s) {
+int main(void) {
+    fastio;
+    cin >> n >> m >> x;
+    for (int i = 1; i <= m; i++) {
+        int a, b, d;
+        cin >> a >> b >> d;
+        graph[a].push_back({b, d});
+        revgr[b].push_back({a, d});
+    }
+
     fill(dist, dist + 1010, INF);
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-    dist[s] = 0;
-    pq.push({0, s});
+    fill(revdist, revdist + 1010, INF);
+
+    dist[x] = revdist[x] = 0;
+    pq.push({0, x});
     while (!pq.empty()) {
         auto [w, cur] = pq.top();
         pq.pop();
@@ -24,32 +36,25 @@ void dijkstra(int s) {
             }
         }
     }
-}
-
-int main(void) {
-    fastio;
-    cin >> n >> m >> x;
     
-    for (int i = 1; i <= m; i++) {
-        int a, b, d;
-        cin >> a >> b >> d;
-        graph[a].push_back({b, d});
-    }
-
-    for (int i = 1; i <= n; i++) {
-        dijkstra(i);
-        res[i] = dist[x];
+    pq.push({0, x});
+    while (!pq.empty()) {
+        auto [w, cur] = pq.top();
+        pq.pop();
+        for (auto [nxt, nxtw]: revgr[cur]) {
+            if (revdist[nxt] > w + nxtw) {
+                revdist[nxt] = w + nxtw;
+                pq.push({w + nxtw, nxt});
+            }
+        }
     }
     
-    dijkstra(x);
-
-    int maxval = 0;
+    int res = 0;
     for (int i = 1; i <= n; i++) {
-        res[i] += dist[i];
-        maxval = max(maxval, res[i]);
+        if (dist[i] != INF && revdist[i] != INF)
+            res = max(dist[i] + revdist[i], res);
     }
-
-    cout << maxval;
+    cout << res;
 
     return 0;
 }
